@@ -1,0 +1,486 @@
+rm -rf filename 
+
+wget http://pfam.xfam.org/family/PF00999/hmm &
+
+
+Download: mvwget http://pfam.xfam.org/family/PF00141/hmm # download 
+
+blastx -subject ara.protein.faa -query brara_chifi_v3.0.faa -out nameoutput.txt -evalue 0.0000000001 -outfmt 6
+
+blastn -subject ara.protein.faa -query brara_chifi_v3.0.faa -out nameoutput.txt -evalue 0.0000000001 -outfmt 6
+
+#!/bin/sh
+#Module06_GenomeSizeEstimation
+
+#zcat allows you to perform analysis without extracting huge files.
+#you will get 17mer/19mer/ 21mer/ 23mer/ 25mer/ folders which contains genomescope result.
+
+date
+echo 'k-mer analysis to identify genome length start'
+
+#zcat forward_paired.fq.gz > forward_paired.fq
+#zcat reverse_paired.fq.gz > reverse_paired.fq
+
+jellyfish count -t 16 -C -m 17 -s 50G -o 17mer_out --min-qual-char=0 Aralia_elata_short_forward_paired.fq Aralia_elata_short_reverse_paired.fq &&
+jellyfish histo -o 17mer_out.histo 17mer_out && genomescope.R 17mer_out.histo 17 150 17mer
+
+date
+echo 'k-mer analysis complete'
+
+#!/bin/sh
+#Module02_longread_sizeSorter
+
+#Long-read size sorting
+
+date
+echo 'read length sorting by factor 10kb start'
+
+samtools faidx Longread_corrected.fasta && cut -f1,2 Longread_corrected.fasta.fai | sort -r -k 2 > Longread_corrected.length
+awk '$2 < 10000 {print $1}' Longread_corrected.length > short_ID
+awk '$2 >= 10000 {print $1}' Longread_corrected.length > Long_ID
+xargs samtools faidx Longread_corrected.fasta <short_ID> Longread_short.fa
+xargs samtools faidx Longread_corrected.fasta <Long_ID> Longread_long.fa
+
+date
+echo 'read length sorting finished'
+
+Finding a sequence
+>>grep "query name" "subject name"
+
+Grabbing a single sequence
+>>awk -v seq="Ppy19309.1" -v RS='>' '$1 == seq {print RS $0}' NewGenePrediction.cds > Ppy19309.1.fa
+>>awk -v seq="query name" -v RS='>' '$1 == seq {print RS $0}' subject name > output format
+
+Download the sequence and paste in your linux account
+
+Finding the sequence using BLASTn command
+>>blastn  -query Ppy19309.1.fa -subject GS3_Genome_Assembly.fasta  -outfmt 6 &
+>>blastn  -query "query name" -subject "subject name"  -outfmt 6 &
+
+Extracting tar.gz files
+>>tar -xf archive.tar.gz
+here, "-x" means (--extract) and "f" means file
+
+Character count
+>>wc -c "file name"
+
+### How to cut a sequence
+First convert the file to .fasta file using the following code
+>>samtools faidx utg000075l_1.fasta
+
+>>samtools faidx utg000075l_1.fasta (header) utg000075l_1:START-END > (output file) RPS2.fasta 
+
+>>samtools faidx utg000075l_1.fasta utg000075l_1:899189-900289 > RPS2.fasta
+
+/agribio/HOME/vadivel/analyses
+
+samtools faidx NK2_Genome_Assembly.fasta utg000008l_1_1:857191-858291 > RPS2_NK2.fasta
+
+awk -v seq="utg000008l_1_1" -v RS='>' '$1 == seq {print RS $0}' NK2_Genome_Assembly.fasta > utg000008l_1_1.fasta
+
+BLAST
+>>blastn  -query Ppy19309.1.fa -subject WH3_Genome_Assembly.fasta  -outfmt 6 &
+
+GRAB the scoffold
+awk -v seq="utg000029l_1" -v RS='>' '$1 == seq {print RS $0}' WH3_Genome_Assembly.fasta > utg000029l_1.fasta
+
+CUT
+>>samtools faidx utg000029l_1.fasta utg000029l_1:8140271-8141371 > RPS2_WH3.fasta
+
+>>samtools faidx utg000029l_1.fasta utg000029l_1:814371-8140996 > RPS2_WH3.fasta
+
+REVERSE THE SEQUENCE
+>>revseq -RPS2_WH3.fasta -noreverse -nocomplement -outseq revseq.fa
+l
+GRAB MANY SEQUENCES USING SEQUENCE IDs
+>>seqtk subseq NewGenePrediction_Prabha.cds gene.list > R-genes.fasta
+
+>>samtools faidx utg000029l_1.fasta utg000029l_1:8140271-8140921 > RPS2_WH3_1.fasta
+
+>>revseq RPS2_WH3_2.fasta -outseq RPS2_WH3_2reverse.fasta
+
+>>samtools faidx utg000029l_1.fasta utg000029l_1:8140996-8141371 > RPS2_WH3_2.fasta
+
+R-gene directory has all the R-gene sequences from the old annotation file
+
+Now i will blast all the R-gene sequence with assembly files
+
+>>blastn  -query R-genes.fasta -subject GS3_Genome_Assembly.fasta  -outfmt 6 &
+>>blastn  -query R-genes.fasta -subject GS3_Genome_Assembly.fasta  -outfmt 6 -out results.csv &
+
+>>samtools faidx GS3_Genome_Assembly.fasta utg000027l_1:14503263-14503458 > RIN4_GS3.fasta
+
+>>samtools faidx GS3_Genome_Assembly.fasta utg000027l_1:14502575-14502619 > RIN4_GS3_1.fasta
+
+>>samtools faidx GS3_Genome_Assembly.fasta utg000033l_1:9876587-9877770 > RPM1_1_GS3_1.fasta
+
+>>revseq RPM1_1_GS3_1.fasta -outseq RPM1_1_GS3_1r.fasta
+
+>>samtools faidx GS3_Genome_Assembly.fasta utg000033l_1:9876163-9876484 > RPM1_1_GS3_2.fasta
+>>revseq RPM1_1_GS3_2.fasta -outseq RPM1_1_GS3_2r.fasta
+
+>>samtools faidx GS3_Genome_Assembly.fasta utg000018l_1:5667409-5667631 > RIN4_2_GS3.fasta
+>>revseq RIN4_2_GS3.fasta -outseq RIN4_2_GS3r.fasta
+
+>>samtools faidx GS3_Genome_Assembly.fasta utg000018l_1:5667251-5667282 > RIN4_2_GS3_1.fasta
+>>revseq RIN4_2_GS3_1.fasta -outseq RIN4_2_GS3_1r.fasta
+
+>>samtools faidx GS3_Genome_Assembly.fasta utg000018l_1:11450255-11451471 > RPM1_2_GS3.fasta
+>>samtools faidx GS3_Genome_Assembly.fasta utg000018l_1:11451629-11452218 > RPM1_2_GS3_1.fasta
+>>samtools faidx GS3_Genome_Assembly.fasta utg000018l_1:3139394-3140128 > RPM1_2_GS3_2.fasta
+>>revseq RPM1_2_GS3_2.fasta -outseq RPM1_2_GS3_2r.fasta
+
+#####
+
+## Annotation
+augustus --species=arabidopsis genome.fna --outfile=Augustus.gtf &
+augustus --species=arabidopsis genome.fna --outfile=Augustus.gtf &
+
+## get the protein file
+
+getAnnoFasta.pl --seqfile=GS3_Genome_Assembly.fasta GS3-agustua.gtf
+
+augustus --species=arabidopsis genome.fna --extrinsicCfgFile=extrinsic.cfg (--hintsfile=hint.gff) --outfile=Augustus.gtf
+getAnnoFasta.pl --seqfile=genome.fna Augustus.gtf
+
+>>getAnnoFasta.pl --seqfile=GS3_Genome_Assembly.fasta GS3-agustua.gtf
+
+GRAB MANY SEQUENCES USING SEQUENCE IDs
+>>seqtk subseq NewGenePrediction_pro.fasta gene.list > R-pro.fasta
+>>getAnnoFasta.pl --seqfile=NK2_Genome_Assembly.fasta NK2-agustus.gtf
+
+ANNOTATION
+
+>> augustus --species=arabidopsis NK2_Genome_Assembly.fasta --outfile=NK2-agustus.gtf &
+
+>>augustus --species=arabidopsis WH3_Genome_Assembly.fasta --outfile=WH3-agustus.gtf &
+
+>>getAnnoFasta.pl --seqfile=GS3_Genome_Assembly.fasta GS3-agustua.gtf
+
+CHECKING THE PROGRESS
+>>top -c -u vadivel
+
+>>blastn  -query R-genes.fasta -subject GS3-agustua.codingseq  -outfmt 6 -out results.csv &
+
+>>blastn  -query R_GS3-pro.fasta -subject GS3-agustua.aa  -outfmt 6 -out results.csv &
+>>blastp  -query R_GS3-pro.fasta -subject GS3-agustua.aa  -outfmt 6 -out results.csv &
+
+FILTERING BLASTP or BLASTN
+cat results_pro.csv | awk '{ if ($3 >= 90 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  results.txt
+
+GRAB MANY SEQUENCES USING SEQUENCE IDs
+>>seqtk subseq GS3-agustua.aa GS3-protein > GS3-R-proteins.fasta
+--------------------------
+NK2
+-----
+GET ANNOTATION
+>>getAnnoFasta.pl --seqfile=NK2_Genome_Assembly.fasta NK2-agustus.gtf
+
+COPY
+>>cp R-pro.fasta /agribio/HOME/vadivel/analyses/nk2
+
+BLASTp
+>>blastp  -query R-pro.fasta -subject NK2-agustus.aa  -outfmt 6 -out results.csv &
+
+FILTERING for TOP HITS with IDENTITY
+>>cat results_pro.csv | awk '{ if ($3 >= 90 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  NK2-blastp-filtered.txt
+
+GRAB MANY SEQUENCE WITH SEQUENCE IDs
+>>seqtk subseq  NK2-agustus.aa NK2-pro-list.txt > NK2-R-proteins.fasta
+
+
+RENAME FASTA HEADER
+>>cat GS3-agustua.codingseq | awk '/^>/{sub(">", ">Ppy_gs3_1"++i " ")}1' | awk -F' ' '{print $1}' > GS3-Agustus.CDS
+
+ 
+VIEW THE FASTA HEADERS
+grep "^>" yorfastafile
+ 
+BLASTp
+>>blastp  -query R-pro.fasta -subject GS3-Agustus.aa  -outfmt 6 -out GS3-blastp-all.csv &
+
+FILTERING FOR TOP HITS 
+>>cat GS3-blastp-all.csv | awk '{ if ($3 >= 90 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  GS3-blastp-filtered.txt
+
+GRAB MANY SEQUENCES WITH SEQUENCE IDs
+>>seqtk subseq  GS3-Agustus.aa GS3-pro-list.txt > GS3-R-proteins.fasta
+-------
+NK2
+
+RENAME FASTA HEADER
+>>cat NK2-agustus.aa | awk '/^>/{sub(">", ">Ppy_nk2_1"++i " ")}1' | awk -F' ' '{print $1}' > NK2-Augustus.aa
+>>cat NK2-agustus.codingseq | awk '/^>/{sub(">", ">Ppy_nk2_1"++i " ")}1' | awk -F' ' '{print $1}' > NK2-Augustus.CDS
+
+BLASTp
+>>blastp  -query R-pro.fasta -subject NK2-Augustus.aa  -outfmt 6 -out NK2-blastp-all.csv &
+
+FILTERING FOR TOP HITS
+>>cat NK2-blastp-all.csv | awk '{ if ($3 >= 90 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  NK2-blastp-filtered.txt
+
+GRAB MANY SEQUENCES WITH SEQUENCE IDs
+>>seqtk subseq  NK2-Augustus.aa NK2-pro-list.txt > NK2-R-proteins.fasta
+
+-------
+WH3
+
+GET ANNOTATION FROM AUGUSTUS.GTF FILE
+>>getAnnoFasta.pl --seqfile=WH3_Genome_Assembly.fasta WH3-agustus.gtf
+
+RENAME FASTA HEADER
+>>cat WH3-agustus.aa | awk '/^>/{sub(">", ">Ppy_wh3_1"++i " ")}1' | awk -F' ' '{print $1}' > WH3-Augustus.aa
+>>cat WH3-agustus.codingseq | awk '/^>/{sub(">", ">Ppy_wh3_1"++i " ")}1' | awk -F' ' '{print $1}' > WH3-Augustus.CDS
+
+BLASTp
+>>blastp  -query R-pro.fasta -subject WH3-Augustus.aa  -outfmt 6 -out WH3-blastp-all.csv &
+
+FILTERING WITH TOP HITS
+>>cat WH3-blastp-all.csv | awk '{ if ($3 >= 90 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  WH3-blastp-filtered.txt
+
+GRAB MANY SEQUENCES WITH SEQUENCE IDs
+
+>>seqtk subseq  WH3-Augustus.aa WH3-pro-list.txt > WH3-R-proteins.fasta
+
+>>seqtk subseq  NewGenePrediction_Prabha.cds NewGenePrediction_pro_list.txt > NewGenePrediction-R-proteins_CDS.fasta
+
+>>seqtk subseq  GS3-Agustus.CDS GS3-pro-list.txt > GS3-R-proteins-CDS.fasta
+>>seqtk subseq  NK2-Augustus.CDS NK2-pro-list.txt > NK2-R-proteins-CDS.fasta
+>>seqtk subseq  WH3-Augustus.CDS WH3-pro-list.txt > WH3-R-proteins-CDS.fasta
+
+CONVERT GTF FILE TO EXCEL (.csv)
+>>awk -F '\t' -v OFS=, '!/^#/ {$1=$1;print}' file.gff > file.csv
+>>awk -F '\t' -v OFS=, '!/^#/ {$1=$1;print}' GS3-agustua.gtf > GS3-agustua.gtf.csv
+----------
+GRAB MANY SEQUENCE 
+
+GET MR5 FROM ANNOTATION
+=Grabbing a single sequence
+>>awk -v seq="Ppy19309.1" -v RS='>' '$1 == seq {print RS $0}' NewGenePrediction.cds > Ppy19309.1.fa
+=Grabbing many sequences
+>>seqtk subseq  NewGenePrediction_pro.fasta new-gene-list.txt > new-gene-list.fasta
+
+BLASTp
+>>blastp  -query new-R-gene.fasta -subject GS3-Agustus.aa  -outfmt 6 -out new-GS3-blastp-all.csv &
+FILTERING WITH TOP HITS
+>>cat new-GS3-blastp-all.csv | awk '{ if ($3 >= 90 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  new-GS3-blastp-filtered.txt
+>>cat new-GS3-blastp-all.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  new-GS3-blastp-filtered_1.txt
+
+GRABBING MANY SEQUENCES WITH IDs
+>>seqtk subseq  NewGenePrediction_pro.fasta MR5-pro-list.txt > new-MR5-pro.fasta
+BLASTp
+>>blastp  -query new-MR5-pro.fasta -subject GS3-Agustus.aa  -outfmt 6 -out GS3-MR5-blastp-all.csv &
+FILTERING
+>>cat GS3-MR5-blastp-all.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  GS3-MR5-blastp-filtered.txt
+BLASTp
+>>blastp  -query new-MR5-pro.fasta -subject NK2-Augustus.aa  -outfmt 6 -out NK2-MR5-blastp-all.csv &
+FILTERING
+>>cat NK2-MR5-blastp-all.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  NK2-MR5-blastp-filtered.txt
+BLASTp
+>>blastp  -query new-MR5-pro.fasta -subject WH3-Augustus.aa  -outfmt 6 -out WH3-MR5-blastp-all.csv &
+FILTERING
+>>cat WH3-MR5-blastp-all.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  WH3-MR5-blastp-filtered.txt
+
+GRABBING MANY SEQUENCES WITH IDs
+>>seqtk subseq  GS3-Agustus.aa GS3-mR5-pro-ids.txt > GS3-MR5-pro-ids.fasta
+>>seqtk subseq NK2-Augustus.aa NK2-MR5-pro-ids.txt > NK2-MR5-pro-ids.fasta
+>>seqtk subseq WH3-Augustus.aa WH3-MR5-pro-ids.txt > WH3-MR5-pro-ids.fasta
+-----------
+RIN4
+GRAB MULTISEQUENCES WITH SEQ IDs
+>>seqtk subseq  NewGenePrediction_pro.fasta RPS2-pro-list.txt > RPS2-pro-ids.fasta
+BLASTp
+>>blastp  -query RIN4-pro-ids.fasta -subject GS3-Agustus.aa  -outfmt 6 -out GS3-RIN4-blastp-all.csv 
+>>cat GS3-RIN4-blastp-all.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  GS3-RIN4-blastp-filtered.txt
+
+>>blastp  -query RIN4-pro-ids.fasta -subject NK2-Agustus.aa  -outfmt 6 -out NK2-RIN4-blastp-all.csv 
+>>cat NK2-RIN4-blastp-all.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  NK2-RIN4-blastp-filtered.txt
+
+>>blastp  -query RIN4-pro-ids.fasta -subject WH3-Agustus.aa  -outfmt 6 -out WH3-RIN4-blastp-all.csv 
+>>cat WH3-RIN4-blastp-all.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  WH3-RIN4-blastp-filtered.txt
+
+GRAB MANY SEQUENCES WITH SEQ IDs
+>>seqtk subseq  GS3-Agustus.aa GS3-RIN4-pro-ids.txt > GS3-RIN4-pro-ids.fasta
+>>seqtk subseq  NK2-Augustus.aa NK2-RIN4-pro-ids.txt > NK2-RIN4-pro-ids.fasta
+>>seqtk subseq  WH3-Augustus.aa WH3-RIN4-pro-ids.txt > WH3-RIN4-pro-ids.fasta
+
+BLASTp
+>>blastp  -query RPM1-pro-ids.fasta -subject GS3-Agustus.aa  -outfmt 6 -out GS3-RPM1-blastp-all.csv &
+FILTERING
+>>cat GS3-RPM1-blastp-all.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  GS3-RPM1-blastp-filtered.txt
+
+GRAB SEQUENCES WITH SEQ IDs
+>>seqtk subseq  GS3-Agustus.aa GS3-RPM1-pro-ids.txt > GS3-RPM1-pro-ids.fasta
+
+BLASTp
+>>blastp  -query RPM1-pro-ids.fasta -subject NK2-Augustus.aa  -outfmt 6 -out NK2-RPM1-blastp-all.csv &
+FILTERING
+>>cat NK2-RPM1-blastp-all.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  NK2-RPM1-blastp-filtered.txt
+GRAB SEQUENCES WITH SEQ IDs
+>>seqtk subseq  NK2-Augustus.aa NK2-RPM1-pro-ids.txt > NK2-RPM1-pro-ids.fasta
+
+BLASTp
+>>blastp  -query RPM1-pro-ids.fasta -subject WH3-Augustus.aa  -outfmt 6 -out WH3-RPM1-blastp-all.csv &
+FILTERING
+>>cat WH3-RPM1-blastp-all.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  WH3-RPM1-blastp-filtered.txt
+GRAB SEQUENCES WITH SEQ IDs
+>>seqtk subseq WH3-Augustus.aa WH3-RPM1-pro-ids.txt > WH3-RPM1-pro-ids.fasta
+>>cat GS3-RPS2-blastp-all.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  GS3-RPS2-blastp-filtered.txt
+>>cat WH3-RPS2-blastp-all.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  WH3-RPS2-blastp-filtered.txt
+
+>>seqtk subseq GS3-Agustus.aa GS3-RPS2-pro-ids.txt > GS3-RPS2-pro-ids.fasta
+>>seqtk subseq NK2-Augustus.aa NK2-RPS2-pro-ids.txt > NK2-RPS2-pro-ids.fasta
+>>seqtk subseq WH3-Augustus.aa WH3-RPS2-pro-ids.txt > WH3-RPS2-pro-ids.fasta
+
+/agribio/HOME/hwpark08
+
+find . -name codon.ctl
+GRAB MANY SEQUENCES WITH IDs
+>>seqtk subseq  GS3-Agustus.mrna GS3-mR5-pro-ids.txt > GS3-R-proteins-mrna.fasta
+
+RepeatMasker 
+>>RepeatMasker -species arabidopsis GS3_Genome_Assembly.fasta &
+
+RepeatMasker -w -s -species arabidopsis GS3_Genome_Assembly.fasta &
+
+RepeatResult.Statistics.xlsr
+>>EXTRCAT A SEQUENCEsamtools faidx yourfastafile.fasta
+samtools faidx yourfastafile.fasta contig_name:start_position-end_position > your_gene_of_interest.fasta Grab all line with gene position from a GTF file
+cat GS3-agustua.gtf | awk 'BEGIN {OFS = "\t"}; {if ($3=="gene") print $1,$2,$3,$4,$5,$6,$7,$8,$9}' > gene.info.txt &remove all line with the string #awk '!/#/' gene.info.txt > tmpfile && mv tmpfile gene.info.cleaned.txt
+
+GRAB THE SEQUENCES WITH IDs
+>>seqtk subseq  gene.info.cleaned.txt GS3_RIN_Gene_list.txt > GS3_RIN_Gene.txt
+
+REMOVE DUPLICATES
+>>sort -u users.txt
+
+EXTRACT MULTIPLE ROWS FROM TXT FILE
+>>sed -n -e 19653p -e 29748p -e 34033p -e 40895p -e 45732p -e 48214p -e 50518p -e 55381p -e 69718p -e 94034p gene.info.cleaned.txt
+
+EXTRACT A SINGLE ROW FROM TXT FILE
+>>sed -n 1p file.txt
+Where, 1 is first line and p is print
+
+>>samtools faidx GS3_Genome_Assembly.fasta utg000075l_1:899189-900289 > RPS2.fasta
+>>samtools faidx GS3_Genome_Assembly.fasta utg000011l_1:6007779 -6008699 >RIN4_genome_gene.fasta
+>>samtools faidx GS3_Genome_Assembly.fasta utg000011l_1:6007779-6008699 -o RIN4_genome_gene.fasta
+
+>>cat WH3-agustus.gtf | awk 'BEGIN {OFS = "\t"}; {if ($3=="gene") print $1,$2,$3,$4,$5,$6,$7,$8,$9}' > gene.info.txt &remove all line with the string #awk '!/#/' gene.info.cleaned.txt
+>>samtools faidx GS3_Genome_Assembly.fasta utg000027l_1:15654930-15664045 -o MR5_genome_gene.fasta
+>>samtools faidx WH3_Genome_Assembly.fasta utg000020l_1:605239-612264 -o WH3-MR4-genome-gene.fasta
+
+>>seqtk subseq  WH3-Augustus.CDS Ppy_WH3_161539 > WH3_MR5-CDS.fasta
+
+>>awk -v seq="Ppy_wh3_161539" -v RS='>' '$1 == seq {print RS $0}' WH3-Augustus.CDS > WH3_MR5-CDS.fasta
+>>awk -v seq="Ppy_gs3_145925" -v RS='>' '$1 == seq {print RS $0}' GS3-Agustus.CDS > GS3_MR5-CDS.fasta
+
+EXTRACT MULTIPLE ROWS FROM TXT FILE
+>>sed -n -e 13021p -e 13017p -e 13042p -e 82494p gene.info.cleaned.txt
+EXTRACT MUTLIPLE ROWS FROM GTF/GFF FILE
+>>cat NK2-agustus.gtf | awk 'BEGIN {OFS = "\t"}; {if ($3=="gene") print $1,$2,$3,$4,$5,$6,$7,$8,$9}' > gene.info.txt &remove all line with the string #awk '!/#/' gene.info.cleaned.txt
+EXTRACT MULTIPLE ROWS FROM TXT FILE
+>>sed -n -e 62842p -e 62846p -e 62822p -e 18645p gene.info.cleaned.txt
+
+>>cat NK2-agustus.gtf | awk 'BEGIN {OFS = "\t"}; {if ($3=="gene") print $1,$2,$3,$4,$5,$6,$7,$8,$9}' > gene.info.txt &remove all line with the string #awk '!/#/' gene.info.txt > tmpfile && mv tmpfile gene.info.cleaned.txt
+
+>>awk '$1!~/\#/{print $1,$2}' Input_file
+
+EXTRACT MULTIPLE ROWS WITH SPECIFIC NUMBER
+>>sed -n -e 29348p -e 29314p -e 29352p -e 29318p -e 29309p -e 29344p -e81432p gene.info.cleaned.txt
+
+REMOVE LINES WITH SPECIFIC CHARACTER AND MAKE LIST
+grep -v '[#]' >output file
+
+EXTRACT SELECTED SEQUENCE RANGE IN A CONTIG
+>>samtools faidx GS3_Genome_Assembly.fasta utg000009l_1:8359841-8372319 utg000009l_1:8403189-8409169 utg000009l_1:8536710-8542718 utg000075l_1:899156-900507 -o GS3_RPS1&2_gene.fasta
+>>samtools faidx WH3_Genome_Assembly.fasta utg000011l_1:4957856-4964842 utg000011l_1:5009216-5019132 utg000011l_1:5047486-5053508 utg000011l_1:5238284-5244319 utg000011l_1:5274974-5287668 utg000029l_1:8140036-8141426 -o WH3_RPS1&2_gene.fasta
+>>samtools faidx GS3_Genome_Assembly.fasta utg000008l_1_1:857153-858537 utg000029l_1_1:4936481-4942476 utg000029l_1_1:5069751-5075997 utg000029l_1_1:5106651-5119345 -o NK2_RPS1_2_gene.fasta
+
+GRAB MANY SEQUENCES WITH IDs
+>>seqtk subseq  WH3-Augustus.CDS WH3-RPS2-pro-ids.txt > WH3-RPS1_2-CDS.fasta
+
+REPEATs IDENTIFICATION AND MASKING 
+BUILD DATABASE
+>>BuildDatabase -name GS3 GS3_Genome_Assembly.fasta
+
+IDENTIFY THE REPEATS USING REPEATMODELER
+>>RepeatModeler -database GS3 -pa 20 &
+
+MASK THE REPEATS USING REPEATMASKER WITH THE "conseni.fa.classified" FILE
+>>RepeatMasker -pa 36 -gff -lib consensi.fa.classified -dir MaskerOutput TAIR10_chr_all.fas
+>>RepeatMasker -pa 36 -gff -lib consensi.fa.classified -dir MaskerOutput GS3_Genome_Assembly.fasta
+
+ANNOTATION
+
+>> augustus --species=arabidopsis NK2_Genome_Assembly.fasta --outfile=NK2-agustus.gtf &
+
+>>augustus --species=arabidopsis WH3_Genome_Assembly.fasta --outfile=WH3-agustus.gtf &
+
+>>getAnnoFasta.pl --seqfile=GS3_Genome_Assembly.fasta.masked Augustus.gtf
+
+blastp  -query new-MR5-pro.fasta -subject Augustus.aa  -outfmt 6 -out results.csv &
+
+seqtk subseq  GS3-Agustus.aa g26788.t1 > MR5.fasta
+
+awk -v seq="g26788.t1" -v RS='>' '$1 == seq {print RS $0}' Augustus.aa > MR5.fasta
+
+awk -v seq="Ppy14060.1" -v RS='>' '$1 == seq {print RS $0}' RPS2-pro-ids.fasta > RPS2_1_Ppy14060.1.fasta
+
+>>cat results.csv | awk '{ if ($3 >= 80 && $3 <= 100) print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12 }' >  MR5.txt
+
+GRAB MANY SEQUENCES WITH SEQ IDs
+>>seqtk subseq  Augustus.aa text.txt > MR5_1.fasta
+
+MASK THE REPEATS USING REPEATMASKER WITH THE "conseni.fa.classified" FILE
+>>RepeatMasker -pa 36 -gff -lib consensi.fa.classified -dir MaskerOutput TAIR10_chr_all.fas
+>>RepeatMasker -pa 36 -gff -lib consensi.fa.classified -dir MaskerOutput NK2_Genome_Assembly.fasta
+
+blastn -db BLASTDB -word_size 7 -query input.fa -out filename -perc_identity 100 -outfmt 6 -max_target_seqs 2
+
+awk '{ print ">" $0 }' yourfile.txt > yourfasta.fas
+
+awk -v seq="CWT00038683" -v RS='>' '$1 == seq {print RS $0}' All_CWT1.fa > CWT00038683.fasta
+
+wget -qO- ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_28/gencode.v28.annotation.gff3.gz \
+    | gunzip --stdout - \
+    | awk '$3 == "gene"' - \
+    | convert2bed -i gff --attribute-key="gene_name" - \
+    > genes.bed
+
+augustus --species=arabidopsis bienertia_sinuspersici_05Dec2019_3XwMn.fasta --outfile=Augustus.gtf &
+
+VCF header line counting
+>> grep -c '^>' LP08.codingseq
+where > should be changed to # or other symbols as required
+
+getAnnoFasta.pl --seqfile=c7.1.fa c.gtfr
+
+>>Downloading a file from the server. An alternate to wget command
+curl -O (capital O) link &
+
+CONVERT Fq TO Fa FILE
+>>seqtk seq -a in.fastq.gz > out.fasta
+
+>>awk -v seq="NODE_155654_length_4305_cov_34.950523" -v RS='>' '$1 == seq {print RS $0}' LP8_Refer.fa > NODE_155654_length_4305_cov_34.950523.fasta
+
+>>awk -v seq="NODE_164857_length_3901_cov_62.336067" -v RS='>' '$1 == seq {print RS $0}' LP21_refer.fa > NODE_164857_length_3901_cov_62.336067.fasta
+
+>>awk -v seq="NODE_149928_length_3487_cov_60.131344" -v RS='>' '$1 == seq {print RS $0}' LP21_refer.fa > NODE_149928_length_3487_cov_60.131344.fasta
+
+>>awk -v seq="NODE_141133_length_1467_cov_39.075665" -v RS='>' '$1 == seq {print RS $0}' LP8_Refer.fa > NODE_141133_length_1467_cov_39.075665.fasta
+
+Uncompress file
+
+>>gzip -d filename
+
+GRAB A SEQUENCE
+>>awk -v seq=">Bsv0100-00016849-RA" -v RS='>' '$1 == seq {print RS $0}' transcripts.fasta > HKT1;3.fa
+
+>>awk -v seq="Ppy19309.1" -v RS='>' '$1 == seq {print RS $0}' NewGenePrediction.cds > Ppy19309.1.fa
+
+REVERSE SEQ AND COMPLEMENT
+revseq test.fasta -reverse -complement -outseq test.revcomp.fasta
+
+ANNOTATION
+>> augustus --species=arabidopsis genome.fasta --outfile=Bs_Augustus.gtf &
+
+GRAB MANY SEQUENCES WITH SEQ IDs
+>>seqtk subseq  Augustus.aa text.txt > MR5_1.fasta
