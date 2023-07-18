@@ -1,0 +1,67 @@
+﻿###############################################################
+##################### Primer3 실행 명령어 #####################
+###############################################################
+
+### Primer3 input 파일 만들기
+vi PCR_primer3_input.txt
+
+# 아래 내용 입력
+SEQUENCE_ID=chr01:5729553-5730110
+SEQUENCE_TEMPLATE=GATATGATTGACAGGAAGTGCAATGACATGTCCTTACACCAACAGGATGTGATAAAGATAATGAAGCTTGCAATGTGGTGCTTGCAGAGTGATTGCAACAGAAGGCCTTCCATGTCATTGGTGATGAAGGTCCTTGAAGGAGAAAGTGATGTTGAAGCCAACTTGAACTATAACTTCTTTGATTGCCGCCAGCGTTCATCCTGAGCCAGGATCGAACTCTCCATGAGATTCATGGTTGCATTACTTATAGCTTCCTTATTTGTAGACAAAGCGGATTCGGAATTGTCTTTCCTTCCAAGGATAACTTGTATCCATGCGCTTCAGATTATTAGCCTGTTAAGTCCTGCGAATTATGTTCCCGTTGACCCATTCAAGATGTCACTGCATGGCTCCATGCCTCCACCTGAAGCAAATGCAGATGTAGAAAACCATTTTTGTGAACTGTATTACTGCAATCATATCATTGATATCACACATCGATCAGTGCATACCCAAGTTAATCTGTGTATTGACTAGAAATGGTAGTACTGTTTCAGTTCAGTTATTTTGTGTCTTTTG
+SEQUENCE_TARGET=274,10
+PRIMER_EXPLAIN_FLAG=1
+PRIMER_TASK=pick_pcr_primers
+PRIMER_PICK_LEFT_PRIMER=1
+PRIMER_PICK_INTERNAL_OLIGO=0
+PRIMER_PICK_RIGHT_PRIMER=1
+PRIMER_PRODUCT_SIZE_RANGE=100-200
+PRIMER_MIN_SIZE=18
+PRIMER_OPT_SIZE=20
+PRIMER_MAX_SIZE=24
+PRIMER_MIN_TM=55
+PRIMER_OPT_TM=60
+PRIMER_MAX_TM=65
+PRIMER_MAX_NS_ACCEPTED=0
+PRIMER_THERMODYNAMIC_PARAMETERS_PATH=/agribio/HOME/edu_02/prepare/230719/Marker/primer3_config/
+=
+
+### primer3 실행
+primer3_core -format_output -strict_tags -output=PCR_primer3_result.txt PCR_primer3_input.txt 
+
+### primer3 결과 확인
+less PCR_primer3_result.txt
+
+
+
+##############################################################
+##################### Bowtie 실행 명령어 #####################
+##############################################################
+
+### bowtie input 파일 만들기 (Forward primer)
+vi PCR_primer_F.fa
+
+# 아래 내용 입력
+>primer1_F
+AGCCAGGATCGAACTCTCCA
+>primer2_F
+GAGCCAGGATCGAACTCTCC
+
+
+### bowtie input 파일 만들기 (Reverse primer)
+vi PCR_primer_R.fa
+
+# 아래 내용 입력
+>primer1_R
+GGAGCCATGCAGTGACATCT
+>primer2_R
+ATGGAGCCATGCAGTGACAT
+
+
+### bowtie index 작성
+bowtie-build reference.fa reference.fa
+
+### bowtie 실행
+bowtie -a -p 5 -f -X 500 --fr reference.fa -1 PCR_primer_F.fa -2 PCR_primer_R.fa PCR_primer_result.aln 
+
+### bowtie 결과 확인
+less PCR_primer_result.aln

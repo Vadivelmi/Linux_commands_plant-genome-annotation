@@ -1,0 +1,98 @@
+﻿##############################################################
+###################### 서버 실행 명령어 ######################
+##############################################################
+
+### 실행명령어 1
+gatk VariantsToTable -V combined_flt_snps.PASS.vcf -R reference.fa -F CHROM -F POS -F REF -F ALT -GF GT -O combined_flt_snps.PASS.vcf.table
+
+### R package 설치 1
+R
+install.packages("optparse_1.7.3.tar.gz", repos=NULL)
+library("optparse")
+quit()
+
+### 실행명령어 2
+Rscript convert-vcf-to-hapmap.R -i combined_flt_snps.PASS.vcf.table -o vcf_converted_to_hapmap.txt
+
+
+
+##############################################################
+##################### Window 실행 명령어 #####################
+##############################################################
+
+### R package 설치 2
+
+### dir 
+//10.30.120.101/public/00.초고성능컴퓨터 활용 강의/230719_전장유전체연관분석_이론_및_실습/전장_유전체_실습파일/downloaded_packages
+
+setwd("dir")
+getwd()
+pkPath <- getwd()
+
+FileName = list.files()
+
+for(i in range(2)){
+  for(j in 1:length(FileName)){
+    pkName <- paste(pkPath,"/",FileName[j], sep="")
+    install.packages(
+    pkName, 
+    repos = NULL, 
+    dependencies = FALSE
+    )
+  }
+}
+
+
+### R source 불러오기 
+
+### //10.30.120.101/public/00.초고성능컴퓨터 활용 강의/230719_전장유전체연관분석_이론_및_실습/전장_유전체_실습파일/gapit_functions.txt
+source("파일경로/파일명")
+
+
+
+##############################################################
+###################### GAPIT 실행 명령어 #####################
+##############################################################
+
+### GAPIT 실행 경로 설정
+### C://Users/ZETACORE/Desktop/GAPIT_result
+
+setwd("폴더경로")
+
+### GAPIT 데이터 불러오기
+### //10.30.120.101/public/00.초고성능컴퓨터 활용 강의/230719_전장유전체연관분석_이론_및_실습/전장_유전체_실습파일/GAPIT_Tutorial_Data/GAPIT_Tutorial_Data/mdp_traits.txt
+### //10.30.120.101/public/00.초고성능컴퓨터 활용 강의/230719_전장유전체연관분석_이론_및_실습/전장_유전체_실습파일/GAPIT_Tutorial_Data/GAPIT_Tutorial_Data/mdp_genotype_test.hmp.txt
+
+
+myY <- read.table("mdp_traits.txt", head=TRUE)
+myG <- read.table("mdp_genotype_test.hmp.txt", head=FALSE)
+
+### GAPIT 데이터 확인하기
+View(myY)
+View(myG)
+
+### GAPIT 실행 명령어 (GLM)
+myGAPIT <- GAPIT(
+Y=myY,
+G=myG,
+PCA.total=3,
+model="GLM"
+)
+
+### GAPIT 실행 명령어 (MLM)
+myGAPIT <- GAPIT(
+Y=myY,
+G=myG,
+PCA.total=3
+)
+
+### GAPIT 실행 명령어 (CMLM)
+myGAPIT <- GAPIT(
+Y=myY,
+G=myG,
+PCA.total=3,
+kinship.cluster=c("average", "complete", "ward"),
+kinship.group=c("Mean", "Max"),
+model="CMLM"
+)
+

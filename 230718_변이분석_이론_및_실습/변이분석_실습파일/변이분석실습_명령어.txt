@@ -1,0 +1,112 @@
+#####################################################
+# 1
+trimmomatic PE -threads 1 -phred33 SRR17493738_ransel_1.fastq.gz SRR17493738_ransel_2.fastq.gz P1_paired1.fq P1_paired1_un.fq P1_paired2.fq P1_paired2_un.fq ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
+
+#####################################################
+# 2
+bwa index reference.fa
+
+#####################################################
+# 3
+samtools faidx reference.fa
+
+#####################################################
+# 4
+gatk CreateSequenceDictionary -R reference.fa
+
+#####################################################
+# 5
+bwa mem -t 1 -k 19 -R "@RG\tID:P1.1\tLB:P1.fq\tSM:P1\tPL:ILLUMINA" reference.fa P1_paired1.fq P1_paired2.fq -o P1_paired.sam
+
+#####################################################
+# 6
+samtools view -b -t reference.fa.fai -o P1_paired.bam P1_paired.sam
+
+#####################################################
+# 7
+gatk FixMateInformation -I P1_paired.bam -O P1_fixmate.bam -SO coordinate --CREATE_INDEX true --VALIDATION_STRINGENCY SILENT
+
+#####################################################
+# 8
+gatk MarkDuplicates -I P1_fixmate.bam -O P1_rmdup.bam -M P1_metrics.txt --REMOVE_DUPLICATES true --CREATE_INDEX true --VALIDATION_STRINGENCY SILENT
+
+#####################################################
+# 9
+samtools flagstats P1_rmdup.bam
+
+#####################################################
+# 10
+gatk --java-options '-DGATK_STACKTRACE_ON_USER_EXCEPTION=true' HaplotypeCaller -R reference.fa -I P1_rmdup.bam -O P1_raw_variants.vcf
+
+#####################################################
+# 11
+gatk SelectVariants -V P1_raw_variants.vcf -select-type SNP -O P1_raw_snps.vcf 
+
+#####################################################
+# 12
+gatk VariantFiltration -V P1_raw_snps.vcf -filter "QD < 2.0" --filter-name "QD2" -filter "QUAL < 30.0" --filter-name "QUAL30" -filter "SOR > 3.0" --filter-name "SOR3" -filter "FS > 60.0" --filter-name "FS60" -filter "MQ < 40.0" --filter-name "MQ40" -O P1_flt_snps.vcf
+
+#####################################################
+# 13
+gatk SelectVariants -V P1_raw_variants.vcf -select-type INDEL -O P1_raw_indels.vcf 
+
+#####################################################
+# 14
+gatk VariantFiltration -V P1_raw_indels.vcf -filter "QD < 2.0" --filter-name "QD2" -filter "QUAL < 30.0" --filter-name "QUAL30" -filter "FS > 200.0" --filter-name "FS200" -O P1_flt_indels.vcf
+
+#####################################################
+# 15
+gatk BaseRecalibrator -R reference.fa -I P1_rmdup.bam --known-sites P1_flt_snps.vcf --known-sites P1_flt_indels.vcf -O P1_recal.table
+
+#####################################################
+# 16
+gatk ApplyBQSR -R reference.fa -I P1_rmdup.bam -bqsr P1_recal.table -O P1_recal.bam
+
+#####################################################
+# 17
+gatk --java-options '-DGATK_STACKTRACE_ON_USER_EXCEPTION=true' HaplotypeCaller -R reference.fa -I P1_recal.bam -O P1_variants.g.vcf -ERC GVCF
+
+#####################################################
+# 18
+gatk CombineGVCFs -R reference.fa -V P1_variants.g.vcf -V P2_variants.g.vcf -V MixS_variants.g.vcf -V MixR_variants.g.vcf -O combined_raw.g.vcf
+
+#####################################################
+# 19
+gatk GenotypeGVCFs -R reference.fa -V combined_raw.g.vcf -O combined_raw.vcf_sub
+
+#####################################################
+# 20
+java -jar /agribio/soft/snpEff/snpEff-5.1/snpEff.jar ann -dataDir /agribio/HOME/edu_02/prepare/230718/dataset Oryza_sativa combined_raw.vcf > combined_raw.ann.vcf
+
+#####################################################
+# 21
+gatk SelectVariants -V combined_raw.ann.vcf -select-type SNP -O combined_raw.ann_snps.vcf 
+
+#####################################################
+# 22
+gatk VariantFiltration -V combined_raw.ann_snps.vcf -filter "QD < 2.0" --filter-name "QD2" -filter "QUAL < 30.0" --filter-name "QUAL30" -filter "SOR > 3.0" --filter-name "SOR3" -filter "FS > 60.0" --filter-name "FS60" -filter "MQ < 40.0" --filter-name "MQ40" -O combined_flt_snps.vcf
+
+#####################################################
+# 23
+gatk SelectVariants -V combined_raw.ann.vcf -select-type INDEL -O combined_raw.ann_indels.vcf 
+
+#####################################################
+# 24
+gatk VariantFiltration -V combined_raw.ann_indels.vcf -filter "QD < 2.0" --filter-name "QD2" -filter "QUAL < 30.0" --filter-name "QUAL30" -filter "FS > 200.0" --filter-name "FS200" -O combined_flt_indels.vcf
+
+#####################################################
+# 25
+bcftools view -f PASS combined_flt_snps.vcf > combined_flt_snps.PASS.vcf
+
+#####################################################
+# 26
+bcftools view -i 'FMT/DP>5' combined_flt_snps.PASS.vcf > combined_flt_snps.PASS.DP5.vcf
+
+#####################################################
+# 27
+bcftools view -i 'QUAL>40' combined_flt_snps.PASS.vcf > combined_flt_snps.PASS.qual.vcf
+
+#####################################################
+# 28
+python vcf2fasta.py combined_flt_snps.PASS.vcf
+
