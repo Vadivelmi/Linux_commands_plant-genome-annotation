@@ -22,10 +22,9 @@ Rscript convert-vcf-to-hapmap.R -i combined_flt_snps.PASS.vcf.table -o vcf_conve
 
 ### R package 설치 2
 
-### dir 
-//10.30.120.101/public/00.초고성능컴퓨터 활용 강의/230719_전장유전체연관분석_이론_및_실습/전장_유전체_실습파일/downloaded_packages
+### setwd("dir")
 
-setwd("dir")
+setwd("//10.30.120.101/public/00.초고성능컴퓨터 활용 강의/230719_전장유전체연관분석_이론_및_실습/전장_유전체_실습파일/downloaded_packages")
 getwd()
 pkPath <- getwd()
 
@@ -44,28 +43,27 @@ for(i in range(2)){
 
 
 ### R source 불러오기 
+### source("파일경로/파일명")
 
-### //10.30.120.101/public/00.초고성능컴퓨터 활용 강의/230719_전장유전체연관분석_이론_및_실습/전장_유전체_실습파일/gapit_functions.txt
-source("파일경로/파일명")
-
+source("//10.30.120.101/public/00.초고성능컴퓨터 활용 강의/230719_전장유전체연관분석_이론_및_실습/전장_유전체_실습파일/gapit_functions.txt")
 
 
 ##############################################################
 ###################### GAPIT 실행 명령어 #####################
 ##############################################################
 
-### GAPIT 실행 경로 설정
-### C://Users/ZETACORE/Desktop/GAPIT_result
+### GAPIT 실행 경로 설정 (결과 저장경로)
+### setwd("폴더경로")
 
-setwd("폴더경로")
+setwd("C://Users/ZETACORE/Desktop/GAPIT_result")
 
 ### GAPIT 데이터 불러오기
-### //10.30.120.101/public/00.초고성능컴퓨터 활용 강의/230719_전장유전체연관분석_이론_및_실습/전장_유전체_실습파일/GAPIT_Tutorial_Data/GAPIT_Tutorial_Data/mdp_traits.txt
-### //10.30.120.101/public/00.초고성능컴퓨터 활용 강의/230719_전장유전체연관분석_이론_및_실습/전장_유전체_실습파일/GAPIT_Tutorial_Data/GAPIT_Tutorial_Data/mdp_genotype_test.hmp.txt
 
+### myY <- read.table("mdp_traits.txt", head=TRUE)
+### myG <- read.table("mdp_genotype_test.hmp.txt", head=FALSE)
 
-myY <- read.table("mdp_traits.txt", head=TRUE)
-myG <- read.table("mdp_genotype_test.hmp.txt", head=FALSE)
+myY <- read.table("//10.30.120.101/public/00.초고성능컴퓨터 활용 강의/230719_전장유전체연관분석_이론_및_실습/전장_유전체_실습파일/GAPIT_Tutorial_Data/GAPIT_Tutorial_Data/mdp_traits.txt", head=TRUE)
+myG <- read.table("//10.30.120.101/public/00.초고성능컴퓨터 활용 강의/230719_전장유전체연관분석_이론_및_실습/전장_유전체_실습파일/GAPIT_Tutorial_Data/GAPIT_Tutorial_Data/mdp_genotype_test.hmp.txt", head=FALSE)
 
 ### GAPIT 데이터 확인하기
 View(myY)
