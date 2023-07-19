@@ -46,22 +46,26 @@ less PCR_primer3_result.txt
 ### bowtie input 파일 만들기 (Forward primer)
 vi PCR_primer_F.fa
 
+i누르기 프라이머 입력
 # 아래 내용 입력
 >primer1_F
 AGCCAGGATCGAACTCTCCA
 >primer2_F
 GAGCCAGGATCGAACTCTCC
 
+esc 누르기 -> :입력 wq! 입력 엔터
 
 ### bowtie input 파일 만들기 (Reverse primer)
 vi PCR_primer_R.fa
 
+i누르기 프라이머 입력
 # 아래 내용 입력
 >primer1_R
 GGAGCCATGCAGTGACATCT
 >primer2_R
 ATGGAGCCATGCAGTGACAT
 
+esc 누르기 -> :입력 wq! 입력 엔터
 
 ### bowtie index 작성
 bowtie-build reference.fa reference.fa
